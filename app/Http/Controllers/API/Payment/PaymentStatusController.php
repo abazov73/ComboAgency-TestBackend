@@ -20,8 +20,8 @@ class PaymentStatusController extends Controller
 
         if ($updated) {
             return response('success');
-        } else {
-            return response('Error processing data', 422);
         }
+
+        return response('Error processing data', 422);
     }
 }
