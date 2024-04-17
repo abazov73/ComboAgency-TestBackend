@@ -11,7 +11,7 @@ class PaymentStatusController extends Controller
 {
     public function __invoke(PaymentStatusRequest $request, PaymentServiceInterface $paymentService)
     {
-        $updated = $paymentService->update($request->getPaymentData());
+        $updated = $paymentService->update($request->validated());
 
         if ($updated) {
             return response('success');

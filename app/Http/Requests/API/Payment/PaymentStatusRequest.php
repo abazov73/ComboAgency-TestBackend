@@ -17,7 +17,7 @@ class PaymentStatusRequest extends FormRequest
      */
     public function rules(): array
     {
-        if ($this->header('Content-Type') === 'application/json') {
+        if ($this->getContentTypeFormat() === 'json') {
             return [
                 'merchant_id' => 'required|numeric',
                 'payment_id' => 'required|numeric|exists:' . (new Payment())->getTable() . ',id',
@@ -37,17 +37,5 @@ class PaymentStatusRequest extends FormRequest
                 'rand' => 'required|string',
             ];
         }
-    }
-
-    public function getPaymentData(): array
-    {
-        $paymentFieldName = $this->header('Content-Type') === 'application/json' ? 'payment_id' : 'invoice';
-
-        return [
-            'id' => Arr::get($this, $paymentFieldName),
-            'status' => Arr::get($this, 'status'),
-            'amount' => Arr::get($this, 'amount'),
-            'amount_paid' => Arr::get($this, 'amount_paid')
-        ];
     }
 }
