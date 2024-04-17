@@ -9,14 +9,9 @@ use Illuminate\Http\Request;
 
 class PaymentStatusController extends Controller
 {
-    public function __construct(
-        private readonly PaymentServiceInterface $paymentService
-    ) {
-    }
-
-    public function __invoke(PaymentStatusRequest $request)
+    public function __invoke(PaymentStatusRequest $request, PaymentServiceInterface $paymentService)
     {
-        $updated = $this->paymentService->update($request->getPaymentData());
+        $updated = $paymentService->update($request->getPaymentData());
 
         if ($updated) {
             return response('success');

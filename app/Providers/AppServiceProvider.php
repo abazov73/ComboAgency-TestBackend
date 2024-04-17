@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\PaymentGateway\PaymentFormGateway;
+use App\Http\Middleware\PaymentGateway\PaymentGatewayInterface;
+use App\Http\Middleware\PaymentGateway\PaymentJsonGateway;
 use App\Services\Payment\PaymentService;
 use App\Services\Payment\PaymentServiceInterface;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -19,6 +22,13 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(
             PaymentServiceInterface::class,
             PaymentService::class,
+        );
+
+        $this->app->bind(
+            PaymentGatewayInterface::class,
+            request()->getContentTypeFormat() === 'json'
+                ? PaymentJsonGateway::class
+                : PaymentFormGateway::class,
         );
     }
 
