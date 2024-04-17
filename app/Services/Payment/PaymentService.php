@@ -11,26 +11,26 @@ class PaymentService implements PaymentServiceInterface
     {
         if (request()->getContentTypeFormat() === 'json') {
             $paymentData = [
-                'id' => Arr::get($data, 'payment_id'),
-                'status' => Arr::get($data, 'status'),
-                'amount' => Arr::get($data, 'amount'),
-                'amount_paid' => Arr::get($data, 'amount_paid'),
-                'merchant_id' => Arr::get($data, 'merchant_id'),
-            ];
-        } else if (request()->getContentTypeFormat() === 'form') {
-            $paymentData = [
-                'id' => Arr::get($data, 'invoice'),
-                'status' => Arr::get($data, 'status'),
-                'amount' => Arr::get($data, 'amount'),
-                'amount_paid' => Arr::get($data, 'amount_paid'),
-                'merchant_id' => Arr::get($data, 'project'),
+                'payment_id' => $data['payment_id'],
+                'status' => $data['status'],
+                'amount' => $data['amount'],
+                'amount_paid' => $data['amount_paid'],
+                'merchant_id' => $data['merchant_id'],
             ];
         } else {
-            return false;
+            $paymentData = [
+                'payment_id' => $data['invoice'],
+                'status' => $data['status'],
+                'amount' => $data['amount'],
+                'amount_paid' => $data['amount_paid'],
+                'merchant_id' => $data['project'],
+            ];
         }
 
         $payment = Payment::query()
-            ->find(Arr::get($paymentData, 'id'));
+            ->where('merchant_id', $paymentData['merchant_id'])
+            ->where('payment_id', $paymentData['payment_id'])
+            ->first();
 
         return $payment?->update($paymentData);
     }

@@ -25,6 +25,10 @@ class PaymentFormGateway
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if ($request->getContentTypeFormat() !== 'form') {
+            abort(422, 'Unsupported format');
+        }
+
         $fields = $request->all($this->formFields);
         ksort($fields);
         $sign = hash('md5', implode('.', $fields) . config('payments.data.second.app_key'));

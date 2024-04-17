@@ -19,8 +19,8 @@ class PaymentStatusRequest extends FormRequest
     {
         if ($this->getContentTypeFormat() === 'json') {
             return [
-                'merchant_id' => 'required|numeric',
-                'payment_id' => 'required|numeric|exists:' . (new Payment())->getTable() . ',id',
+                'merchant_id' => 'required|numeric|exists:' . (new Payment())->getTable() . ',merchant_id',
+                'payment_id' => 'required|numeric|exists:' . (new Payment())->getTable() . ',payment_id',
                 'status' => ['required', 'string' ,Rule::enum(PaymentStatusEnum::class)],
                 'amount' => 'required|numeric',
                 'amount_paid' => 'required|numeric',
@@ -29,8 +29,8 @@ class PaymentStatusRequest extends FormRequest
             ];
         } else {
             return [
-                'project' => 'required|numeric',
-                'invoice' => 'required|numeric|exists:' . (new Payment())->getTable() . ',id',
+                'project' => 'required|numeric|exists:' . (new Payment())->getTable() . ',merchant_id',
+                'invoice' => 'required|numeric|exists:' . (new Payment())->getTable() . ',payment_id',
                 'status' => ['required', 'string' ,Rule::enum(PaymentStatusEnum::class)],
                 'amount' => 'required|numeric',
                 'amount_paid' => 'required|numeric',
