@@ -40,11 +40,11 @@ class PaymentGatewayCheck
             if ($sign !== $request->get('sign') || config('payments.data.first.merchant_id') !== $request->get('merchant_id')) {
                 abort(422, 'Signature check failed');
             }
-        } else if ($request->header('Content-Type') === 'multipart/form-data') {
+        } else if (str_starts_with($request->header('Content-Type'), 'multipart/form-data')) {
             $fields = $request->all($this->formFields);
             $sign = hash('md5', implode('.', $fields) . config('payments.data.second.app_key'));
 
-            if ($sign !== $request->header('Authorization') || config('payments.data.second.app_id') !== $request->get('project_id')) {
+            if ($sign !== $request->header('Authorization') || config('payments.data.second.app_id') != $request->get('project')) {
                 abort(422, 'Signature check failed');
             }
         } else {
